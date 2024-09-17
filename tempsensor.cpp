@@ -12,6 +12,7 @@ void loop() {
   int chk = DHT.read11(DHT11_PIN);
   // Omvandla temperaturen till Celsius
   float temperatureCelsius = DHT.temperature;
+  // Humidity i celcius XDDDDDD
   // Omvandla luftfuktighet till Celsius
   float humidityCelsius = DHT.humidity;
   
