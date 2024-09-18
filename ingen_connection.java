@@ -1,4 +1,6 @@
 import com.fazecast.jSerialComm.SerialPort;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class ArduinoSensorDatabase {
+public class Main {
 
     // Database credentials
     private static final String DB_URL = "jdbc:mysql://localhost:3306/sensor_data";
@@ -17,7 +19,7 @@ public class ArduinoSensorDatabase {
     private static final String PORT_NAME = "COM3"; // replace with your Arduino's COM port
     private static final int BAUD_RATE = 9600;
 
-    public static <SerialPort> void main(String[] args) {
+    public static void main(String[] args) {
         // Initialize serial port
         SerialPort serialPort = SerialPort.getCommPort(PORT_NAME);
         serialPort.setBaudRate(BAUD_RATE);
@@ -59,8 +61,8 @@ public class ArduinoSensorDatabase {
                     }
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace(); // Ideally use proper logging here
         } finally {
             serialPort.closePort();
         }
