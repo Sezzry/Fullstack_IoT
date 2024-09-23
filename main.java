@@ -8,16 +8,36 @@ public class Main {
 
     // MySQL connection details
     private static final String DB_URL = "jdbc:mysql://localhost:3306/sensor_data";
-    private static final String USER = "root";  
-    private static final String PASS = "Joeman339617!?";  
+    private static final String USER = "root";
+    private static final String PASS = "K2TYRWgvK7VYGi&";
 
     public static void main(String[] args) {
-        // Find the serial port Arduino is connected to
-        SerialPort comPort = SerialPort.getCommPorts()[0];  // Adjust index based on your system
+        // List all available COM ports to check visibility
+        SerialPort[] ports = SerialPort.getCommPorts();
+        System.out.println("Available ports:");
+        for (SerialPort port : ports) {
+            System.out.println(" - " + port.getSystemPortName());
+        }
 
-        // Open the serial port
-        comPort.openPort();
-        comPort.setBaudRate(9600);  
+        // Find the specific COM5 port
+        SerialPort comPort = SerialPort.getCommPort("COM5");
+
+        // Check if the port is available and open it
+        if (comPort == null) {
+            System.err.println("COM5 not found or is currently unavailable.");
+            return;
+        }
+
+        // Attempt to open the port and check if successful
+        if (!comPort.openPort()) {
+            System.err.println("Failed to open COM5. Check if it's already in use.");
+            return;
+        } else {
+            System.out.println("COM5 opened successfully.");
+        }
+
+        // Set baud rate for communication
+        comPort.setBaudRate(9600);
 
         // Connect to MySQL database
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
@@ -25,7 +45,7 @@ public class Main {
 
             // Continuously read from Arduino and log to MySQL
             while (true) {
-                if (comPort.bytesAvailable() > 3) {
+                if (comPort.bytesAvailable() > 0) {
                     // Read data from Arduino
                     byte[] readBuffer = new byte[comPort.bytesAvailable()];
                     comPort.readBytes(readBuffer, readBuffer.length);
@@ -49,6 +69,10 @@ public class Main {
                             float temperature = Float.parseFloat(tempPart);
                             float humidity = Float.parseFloat(humidityPart);
 
+                            // Print the values before inserting into the database
+                            System.out.println("Temperature value to insert: " + temperature);
+                            System.out.println("Humidity value to insert: " + humidity);
+
                             // Insert the data into MySQL
                             insertSensorData(connection, "temperature", temperature);
                             insertSensorData(connection, "humidity", humidity);
@@ -57,7 +81,7 @@ public class Main {
                         }
                     }
                 }
-                Thread.sleep(2000);  
+                Thread.sleep(2000);
             }
 
         } catch (SQLException e) {
@@ -66,7 +90,8 @@ public class Main {
             Thread.currentThread().interrupt();
             System.err.println("Thread interrupted: " + e.getMessage());
         } finally {
-            comPort.closePort();  
+            comPort.closePort();
+            System.out.println("COM5 closed.");
         }
     }
 
