@@ -24,5 +24,5 @@ void loop() {
   Serial.print(humidityCelsius);
   Serial.println(" %");
   
-  delay(1000);
+  delay(60000);
 }
