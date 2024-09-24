@@ -10,19 +10,14 @@ void setup() {
 
 void loop() {
   int chk = DHT.read11(DHT11_PIN);
-  // Omvandla temperaturen till Celsius
   float temperatureCelsius = DHT.temperature;
-  // Humidity i celcius XDDDDDD
-  // Omvandla luftfuktighet till Celsius
   float humidityCelsius = DHT.humidity;
+
   
-  Serial.print("Temperatur = ");
+  Serial.print("Temperature: ");
   Serial.print(temperatureCelsius);
-  Serial.println(" °C");
-  
-  Serial.print("Luftfuktighet = ");
-  Serial.print(humidityCelsius);
-  Serial.println(" %");
-  
+  Serial.print(", Humidity: ");
+  Serial.println(humidityCelsius);
+
   delay(60000);
 }
