@@ -45,13 +45,17 @@ public class Main {
         }
     }
 
+    // Method to process each message and set temperature or humidity
     private static void processMessage(String message) {
         try {
-            if (message.startsWith("Temperatur")) {
-                temperature = Float.parseFloat(message.split("=")[1].trim().split(" ")[0]);
+            // Trim and remove extra spaces before processing
+            message = message.replaceAll("\\s+", "").toLowerCase();
+
+            if (message.startsWith("temperatur=")) {
+                temperature = Float.parseFloat(message.replace("temperatur=", "").replace("c", ""));
                 System.out.println("Temperature set to: " + temperature);
-            } else if (message.startsWith("Luftfuktighet")) {
-                humidity = Float.parseFloat(message.split("=")[1].trim().split(" ")[0]);
+            } else if (message.startsWith("luftfuktighet=")) {
+                humidity = Float.parseFloat(message.replace("luftfuktighet=", "").replace("%", ""));
                 System.out.println("Humidity set to: " + humidity);
             } else {
                 System.err.println("Unknown message format: " + message);
