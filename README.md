@@ -1,4 +1,4 @@
 # Fullstack_IoT
 
-#Grupparbete Systemintegtation IOT
+#Grupparbete Systemintegration IOT
 # Saran och Gustav
